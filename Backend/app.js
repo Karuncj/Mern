@@ -1,8 +1,14 @@
+const { json } = require('express');
 const express=require('express');
 const app=express();
 require('dotenv/config');
 
 const api=process.env.API_URL;
+
+//middleware
+app.use(express.json());
+
+
 app.get(`${api}/products`,(req,res)=>{
     const product={
         id:1,
