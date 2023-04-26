@@ -6,45 +6,15 @@ const mongoose=require('mongoose');
 
 require('dotenv/config');
 const api=process.env.API_URL;
+const productRouter=require('./routers/products');
+
 
 //middleware
 app.use(express.json());
 app.use(morgan('tiny'));
 
-const productSchema=mongoose.Schema({
-name:String,
-image:String,
-countInstock:{
-    type:Number,
-    required:true
-}
-})
-const Product=mongoose.model('Product',productSchema);
-
-app.get(`${api}/products`,async(req,res)=>{
-    const productList=await Product.find();
-
-    if(productList){
-        res.status(500).json({sucess:false})
-    }
-    res.send(productList)
-})
-app.post(`${api}/products`,(req,res)=>{
-   const product=new Product({
-    name:req.body.name,
-    image:req.body.image,
-    countInstock:req.body.countInstock,
-   })
-
-   product.save().then=((createdProduct=>{
-    res.status(201).json(createdProduct)
-   })).catch((err)=>{
-    res.status(500).json({
-        error:err,
-        sucess:false
-    })
-   })
-})
+//Routers
+app.use(`${api}/products`,productRouter)    
 
 mongoose.connect(process.env.CONNECTION_STRING,{
     useNewUrlParser:true,
