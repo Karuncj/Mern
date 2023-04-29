@@ -17,9 +17,10 @@ router.post(`/`,(req,res)=>{
     countInstock:req.body.countInstock,
    })
 
-   product.save().then=((createdProduct=>{
+   product.save().then((createdProduct=>{
     res.status(201).json(createdProduct)
    })).catch((err)=>{
+    console.log(err)
     res.status(500).json({
         error:err,
         sucess:false
