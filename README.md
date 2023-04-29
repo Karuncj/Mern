@@ -1,1 +1,1 @@
-# Mobile App for e-shop
+# Mobile App for e-shop using MERN technology.
