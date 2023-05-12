@@ -2,7 +2,10 @@ const Product =require('../models/product');
 const express=require('express');
 const { Category } = require('../models/category');
 const product = require('../models/product');
+const { default: mongoose } = require('mongoose');
 const router=express.Router();
+
+
 
 router.get(`/`,async(req,res)=>{
     //const productList=await Product.find().select('name image-id');
@@ -48,6 +51,9 @@ router.get('/:id',async(req,res)=>{
 })
 
 router.put('/:id',async(req,res)=>{
+    if(!mongoose.isValidObjectId(req.params.id)){
+        res.status(400).send('Invalid product id')
+    }
     const category=await Category.findById(req.body.category);
     if(!category) 
     return res.status(400).send('Invalid category');
@@ -74,4 +80,37 @@ router.put('/:id',async(req,res)=>{
     res.send(product);
 })
 
+router.delete('/:id',async(req,res)=>{
+    Product.findByIdAndRemove(req.params.id).then(product =>{
+        if(category){
+            return res.status(200).json({success:"the product deleted"})
+        }else{
+            return res.status(404).json({success:"the product not deleted"})
+        }
+    }).catch(err=>{
+        return res.status(400).json({success:false,error:err})
+    })
+})
+
+router.get(`/get/count`,async(req,res)=>{
+    const productCount = await Product.countDocuments();
+
+    if(!productCount){
+        res.status(500).json({success:false})
+    }
+    res.send({
+        productCount:productCount
+    });
+})
+
+
+router.get(`/get/featured/:count`,async(req,res)=>{
+    const count=req.params.count ?req.params.count:0
+    const products = await Product.find({isFeatured:true}).limit(+count);
+
+    if(!products){
+        res.status(500).json({success:false})
+    }
+    res.send(products)
+})
 module.exports=router;
