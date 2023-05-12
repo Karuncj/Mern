@@ -8,8 +8,16 @@ const router=express.Router();
 
 
 router.get(`/`,async(req,res)=>{
+    //http://localhost:3000/api/v1/products?categories=644e96fa634c36190f4a0bff,645c8295086fc2e048908b3a
     //const productList=await Product.find().select('name image-id');
-    const productList=await Product.find().populate('category');
+    let filter={};
+    if(req.query.categories)
+    {
+         filter={category:req.query.categories.split(',')}
+    }
+
+    const productList=await Product.find(filter).populate('category');
+
     if(!productList){
         res.status(500).json({sucess:false})
     }
