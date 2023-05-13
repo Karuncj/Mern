@@ -1,31 +1,35 @@
-const User = require('../models/user');
-const express = require('express');
-const router = express.Router();
+    const User = require('../models/user');
+    const express = require('express');
+    const router = express.Router();
 
-router.get(`/`, async (req, res) =>{
-    
-    const userList = await User.find();
+    router.get(`/`, async (req, res) =>{
+        
+        const userList = await User.find();
 
-    if(!userList) {
-        res.status(500).json({success: false})
-    } 
-    res.send(userList);
-})
-router.post(`/`,(req,res)=>{
-    const user=new User({
-     name:req.body.name,
-     image:req.body.image,
-     countInstock:req.body.countInstock,
+        if(!userList) {
+            res.status(500).json({success: false})
+        } 
+        res.send(userList);
     })
- 
-    user.save().then((createdUser=>{
-     res.status(201).json(createdUser)
-    })).catch((err)=>{
-     res.status(500).json({
-         error:err,
-         sucess:false
-     })
-    })
- })
+    router.post(`/`,async(req,res)=>{
+        let user=new User({
+        name:req.body.name,
+        email:req.body.email,
+        passwordHash:req.body.passwordHash,
+        phone:req.body.phone,
+        isAdmin:req.body.isAdmin,
+        street:req.body.street,
+        apartment:req.body.apartment,
+        zip:req.body.zip,
+        city:req.body.city,
+        country:req.body.country,
+        })
 
-module.exports =router;
+        user=await user.save();
+        if(!user)
+        return res.status(400).send('User Cannot be created');
+
+        res.send(user);
+    })
+
+    module.exports =router;
