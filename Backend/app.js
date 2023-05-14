@@ -12,11 +12,13 @@ const productRouter=require('./routers/products');
 const categoriesRouter=require('./routers/categories');
 const orderRouter=require('./routers/orders');
 const userRouter=require('./routers/users');
+const authJwt = require('./helpers/jwt');
 
 
 //middleware
 app.use(express.json());
 app.use(morgan('tiny'));
+app.use(authJwt);
 
 //Routers
 app.use(`${api}/products`,productRouter)
