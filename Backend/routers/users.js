@@ -52,7 +52,8 @@
         if(user && bcrypt.compareSync(req.body.password,user.passwordHash)){
            const token=jwt.sign(
             {
-                userId:user.id
+                userId:user.id,
+                isAdmin:user.isAdmin
             },
             secret,
             {expiresIn:'1d'}
