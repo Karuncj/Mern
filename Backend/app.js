@@ -11,7 +11,7 @@ const productRouter=require('./routers/products');
 const categoriesRouter=require('./routers/categories');
 const orderRouter=require('./routers/orders');
 const userRouter=require('./routers/users');
-//const authJwt = require('./helpers/jwt');
+const JwtMiddleware = require('./helpers/jwt');
 const errorHandler=require('./helpers/error-handler')
 
 app.use(cors());
@@ -20,7 +20,7 @@ app.options('*',cors())
 //middleware
 app.use(express.json());
 app.use(morgan('tiny'));
-//app.use(authJwt);
+app.use(JwtMiddleware);
 app.use(errorHandler);
 
 //Routers

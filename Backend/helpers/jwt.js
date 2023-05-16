@@ -1,13 +1,13 @@
 const expressJwt = require('express-jwt');
-const product = require('../models/product');
 
-function authJwt() {
+
+function JwtMiddleware() {
     const secret = process.env.secret;
-    const api=process.env.API_URL;
+    const api = process.env.API_URL;
     return expressJwt({
         secret,
         algorithms: ['HS256'],
-        isRevoked:isRevoked
+        isRevoked: isRevoked
     }).unless({
         path:[
             //{url:`${api}/products`,methods:['GET',OPTIONS]},
@@ -17,7 +17,7 @@ function authJwt() {
             `${api}/users/register`,
 
         ]
-    })
+    });
 }
 
 async function isRevoked(req,payload,done){
@@ -27,4 +27,4 @@ async function isRevoked(req,payload,done){
     done();
 }
 
-module.exports = authJwt;
+module.exports = JwtMiddleware;
